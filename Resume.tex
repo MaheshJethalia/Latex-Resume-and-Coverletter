@@ -7,6 +7,7 @@
 \documentclass[10pt]{article}
 
 \usepackage{graphicx}
+\usepackage{tabto}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{algorithm, algorithmicx}
@@ -17,6 +18,7 @@
 \usepackage{url}
 \usepackage{parskip}
 \usepackage[a4paper, total={7in, 10in}, top=1in]{geometry}
+\usepackage{hyperref}
 
 \pagenumbering{gobble}
 
@@ -33,7 +35,7 @@
   \vspace{0.4em}
 }
 
-\newcommand{\EntryGap}{\vspace{0.4	cm}}
+\newcommand{\EntryGap}{\vspace{0.4  cm}}
 \newcommand{\SmallEntryGap}{\vspace{0.2cm}}
 \newcommand{\mdot}{$\ \ \cdot\ \ $}
 
@@ -57,10 +59,10 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% Title %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-{\Large \textbf{Biswajit Paria}} \hfill biswajitsc@iitkgp.ac.in\\
-5th year undergraduate (dual degree) \hfill biswajitsc@gmail.com\\
-Dept. of Computer Science and Engineering \hfill \url{https://biswajitsc.github.io}\\
-Indian Institute of Technology Kharagpur \hfill  +91-8348949676  
+{\Large \textbf{Subham Sekhar Sahoo}} \hfill subbham@iitkgp.ac.in\\
+3rd Year Undergraduate Student\hfill subbham@gmail.com\\
+Electrical Engineering Department \hfill \url{https://shakeh3r.github.io}\\
+Indian Institute of Technology, Kharagpur \hfill  +91-9002966333  
 \EntryGap
 
 
@@ -68,202 +70,147 @@ Indian Institute of Technology Kharagpur \hfill  +91-8348949676
 
 \heading{Education}
 
-\textbf{Indian Institute of Technology Kharagpur, India} \hfill Jul 2012 - Apr 2017\\
-BTech MTech (dual degree) in Computer Science and Engineering\\
-GPA 9.77/10.0, \textbf{ranked 1} among final year dual degree students.
+\textbf{Indian Institute of Technology Kharagpur, India} \hfill Jul 2015 - present\\
+Electrical Engineering major and a Computer Science minor\\
+GPA \textbf{8.3/10.0}
 
 \SmallEntryGap
-\textbf{Kendriya Vidyalaya IIT Kharagpur} \hfill Jul 2010 - Apr 2012\\
+\textbf{DAV Public School, CDA} \hfill Apr 2012 - Apr 2014\\
 All India Senior School Certificate Examination (AISSCE), CBSE board\\
-Percentage score 92.4\%
+Percentage score \textbf{91.2\%}
 
 \SmallEntryGap
-\textbf{Kendriya Vidyalaya IIT Kharagpur} \hfill Apr 2005 - Apr 2010\\
+\textbf{DAV Public School, CDA} \hfill Apr 2007 - Apr 2012\\
 All India Secondary School Examination (AISSE), CBSE board\\
-GPA 9.8/10.0
+GPA \textbf{10.0/10.0}
 
 \EntryGap
 \heading{Interests}
 
-My broad area of interest is machine learning. I am currently working on deep learning,
-particularly on generative models including GANs and Variational Autoencoders.
-In the future I want to work in more mathematically involved areas including statistical
-machine learning, optimization, algorithms, and learning theory.
+Interested in Machine Learning, Reinforcement Learning and related fields. Enjoys working on own initiative or in a team and has a practical approach to problem solving with a drive to see things through to completion.
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%% Papers %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PAPERS
 \EntryGap
 
 \heading{Papers}
   
-  Avisek Lahiri, \textbf{Biswajit Paria}, and Prabir Kumar Biswas. 
-  ``Forward Stagewise Additive Model for Collaborative Multiview Boosting.''
-  \emph{IEEE Transactions in Neural Networks and Learning Systems}. 2016.
-  (Accepted, in press)
-  
-  \SmallEntryGap
-  Avisek Lahiri, \textbf{Biswajit Paria}, and Prabir Kumar Biswas.
-  ``CoMA-Boost: Cooperative Multi Agent AdaBoost.''
-  \emph{Indian Conference on Computer Vision, Graphics and Image Processing}. 2016.
-  (Accepted, oral presentation)
-  
-  \SmallEntryGap
-  \textbf{Biswajit Paria}, Anirban Santara, and Pabitra Mitra.
-  ``Visualization Regularizers for Neural Network based Image Recognition.''
-  \emph{arXiv preprint arXiv:1604.02646}. 2016. (Pre-print)
-  
-  \SmallEntryGap
-  \textbf{Biswajit Paria}, Sanjoy Pratihar, and Partha Bhowmick.
-  ``On Farey Table and its Compression for Space Optimization with Guaranteed Error Bounds.''
-  2016. (Submitted. Please request to get a copy for personal viewing.)
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% INTERNSHIPS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \textbf{Subham Sekhar Sahoo} and Georg Martius.  \emph{"Learning Equation With A Deep Network"}\\
+  Association for the Advancement of Artificial Intelligence \emph{(AAAI-18)}
+  (Submitted)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% INTERNSHIP
 \EntryGap
 
 \heading{Internships and Projects}
 
-\textbf{Bachelor's Thesis, Indian Institute of Technology Kharagpur} \hfill 2015 - 2016\\
-\textbf{Visualization Regularizers for Neural Network based Image Recognition}\\
-Advisor: Prof. Pabitra Mitra
+\textbf{Max Planck Institute for Intelligent Systems, Tuebingen, Germany} \hfill May 2017 - July 2017\\
+\textbf{\emph{Equation Learner}}\\
+Advisor: Dr. Georg Martius (Group Leader- Autonomous Learning Group)
 
 \SmallEntryGap
 
 \indentedpar{
-    Introduced a novel regularizer for Neural Networks
-    based on the \emph{visualizations} of the hidden nodes. 
-    We leveraged the closed algebraic form of the
-    visualizations of the first layer nodes, and used it as a smoothness prior.
-    We show that the regularizer is a special case of the 
-    general Tikhonov regularization. Experimental results show that the 
-    visualization regularizers are an improvement over standard L2 regularizers.
+  $\bullet$ The model (\emph{EQL - Equation Learner}), an end-to-end differentiable feed-forward network, is a multi-layered feed-forward network with computational units specifically designed for the \emph{extrapolation regression} tasks for systems that can be described by real-valued analytic expression, e.g. mechanical systems such as a pendulum or a robotic arm.\\
+  $\bullet$ Due to sparsity regularization concise interpretable expressions are obtained and the source equation of the data (with noise) is often learnt. \\
+  $\bullet$ Deisigned the most significant feature of this network- making it learn the source equations with \emph{division} operation. For this a special kind of cost function was formulated which can be used to \emph{learn equations with poles} in general.
 }
 
 \SmallEntryGap
 
-\textbf{Indian Institute of Technology Kharagpur, India} \hfill 2015 - 2016\\
-\textbf{Forward Stagewise Additive Model for Collaborative Multiview Boosting.}\\
-with Prof. P.K. Biswas
+\textbf{Max Planck Institute for Intelligent Systems, Tuebingen, Germany} \hfill July 2017 - present\\
+\textbf{\emph{Deep Reinforcement Learning For Locomotion Of A Musco-skeletal Robot}}\\
+Advisor: Dr. Georg Martius (Group Leader- Autonomous Learning Group)
 
 \SmallEntryGap
 
 \indentedpar{
-  On AdaBoost in a multiview setting.
-  Introduced a notion of ‘difficulty’ of an example. Difficulty ranges 
-  from -1 to 1 and is a linear function of the number of views the example
-  was misclassified in. The weights are updated as a function of the 
-  difficulty the example rather than on whether the example was misclassified
-  or not. We show that this is an improvement over other multiview frameworks. Analogous
-  to AdaBoost, we derived bounds on 
-  the empirical risk and maximum margin.
+  $\bullet$ Aim - to develop a controller to enable a physiologically-based human model with 41 dimensional state space and 18 dimensional action space, to navigate a complex obstacle course as quickly as possible.\\
+  $\bullet$ Potential obstacles include external obstacles like steps, or a slippery floor, along with internal obstacles like muscle weakness or motor noise. The state space is a 41 dimensional vector and the action space is 18 dimensional. \\
 }
 
 \SmallEntryGap
 
-\textbf{Indian Institute of Science, Bangalore, India} \hfill Summer 2016\\
-\textbf{Natural Language Inference (NLI) using Deep Learning for NLP}\\
-with Prof. Ambedkar Dukkipati
+\textbf{AgNEXT} \hfill October 2016 - December 2016\\
+\textbf{\emph{Crop Disease Detection Using Deep Learning}}\\
+Advisors: Dr. Sangram Ganguly (Research Scientist, NASA Ames Research Center, California, USA) \& \\
+\hspace*{15mm} Dr. Mrigank Sharad (Asst. Professor, IIT Kharagpur)
 
 \SmallEntryGap
 
 \indentedpar{
-  Worked with the Stanford NLI dataset. Given two sentences, the task
-  is to determine whether the sentences are related as an entailment, contradiction
-  or neutral. We explored models using LSTMs, Attentions, and Dependency Parses,
-  and finally came up with a hybrid model. This work
-  has been submitted to a reputed conference.
+Part of the Artificial Intelligence team that created an app meant for people involved in agriculture that :-\\
+$\bullet$ Detects crop disease (if any) based on its leaf's image. A Convolutional Neural Network was trained on a leaf-image dataset with pre-processng. The prediction accuracy was in the range \textbf{97-98\%}.\\
+$\bullet$ Alerts the user if the time is right to use pesticides by capturing the image of a sticky board and then analysing  the number of insects, crop type and weather conditions.
 }
 
 \SmallEntryGap
 
-\textbf{University of Southern California, Los Angeles, USA} \hfill Summer 2015\\
-\textbf{Feature Learning in Clinical Time Series using Deep Learning}\\
-with Prof. Yan Liu
+\textbf{Autonomous Ground Vehicle Research Group, IIT Kharagpur} \hfill October 2016 - December 2016\\
+\textbf{\emph{Autonomous Car}}\\
+Adivisor: Dr. Debasish Chakraborty (Professor, IIT Kharagpur)
 
 \SmallEntryGap
 
 \indentedpar{
-  Worked with ICU time series data consisting and used deep learning with a laplacian 
-  prior regularizer to predict health outcomes. We performed causality analysis on the 
-  final layer nodes, analyzed the activations of the most \emph{causal} nodes 
-  using decision trees, and extracted their maximally activating inputs. This analysis
-  is a step towards understanding neural networks in the context of medical data.
+$\bullet$ Designed a CNN based steering angle predictor. The dataset was made available by \href{https://github.com/udacity/self-driving-car}{Udacity}. Made a training-validation split of 85:15 and preprocessed the imbalanced data with excessive 0 steering angle. The best set of weights was selected with the best validation score.\\
+$\bullet$ Designed a generative model to simulate driving, as proposed in \href{https://arxiv.org/pdf/1608.01230.pdf}{Learning a Driving Simulator} by Comma.ai. Variational auto-encoder was used to embed road frames. A transition model (action conditioned RNN) was then learnt in the embedded space to produce realisitic looking video for several frames.\\
+$\bullet$ Designed a DQN based controller with experience replay to navigate a 4 wheeled bot with lidar in an environment with dynamic obstacles using Deep-Reinforcement Learning.
 }
 
 \SmallEntryGap
-\textbf{Indian Institute of Technology Kharagpur, India} \hfill Summer 2014\\
-\textbf{On Farey Table and its Compression for Space Optimization with Guaranteed Error Bounds}\\
-with Prof. Partha Bhowmick
+
+
+\textbf{Autonomous Ground Vehicle Research Group, IIT Kharagpur} \hfill May 2016 - October 2016\\
+\textbf{\emph{Eklavya 4.0}}\\
+Advisor: Dr. Debasish Chakraborty (Professor, IIT Kharagpur)
 
 \SmallEntryGap
 
 \indentedpar{
-  Studied the number theoretic properties of Farey Sequences and the
-  Farey Table, and came up with a novel algorithm for a lossy compression of the 
-  Farey Table. The Farey Table is an useful data-structure in digital geometry.
-  It's quadratic size ($\Theta(n^2)$) prohibits its use for large dimensions. The
-  compressed table has a size of ($O(n\log n)$), thus allowing table creation for
-  larger $n$.
+$\bullet$ Implemented \emph{SBPL Planner} for Lane Navigation. The motion primitives were generated keeping in mind the physical constraints of the bot.\\
+$\bullet$ Implemented \emph{Waypoint Navigation} module and basic motion planning algorithms on Robot Operating System(ROS).\\
+$\bullet$ Prepared a Gazebo simulation for this bot.
 }
 
 \SmallEntryGap
 
-\textbf{Other Projects}
+
+\textbf{Indian Institute of Technology Kharagpur, India} \hfill January 2017-present\\
+\textbf{\emph{Novel Architectures Of GANs For Semi-supervised \& Un-supervised Learning}}\\
+Advisor: Dr. Pabitra Kumar Biswas (H.O.D, Electronics and Electrical engineering department, IIT Kharagpur)
 
 \SmallEntryGap
 
 \indentedpar{
-  I have worked on numerous other projects, including developmental projects. My GitHub
-  profile (\url{https://github.com/biswajitsc}) lists most of the projects I have worked on.
+Improving existing \emph{Generative Adverserial Network} architectures for achieving better classification accuracy in case of semi-supervised and un-supervised learning is the objective of this project.
 }
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ACADEMIC HONORS & AWARDS %%%%%%%%%%%%%%%%%%%%%%
 
 
 \EntryGap
 \heading{Academic Honors and Awards}
- 
- \textbf{Goralal Syngal Scholarship} \hfill 2015 \& 2016\\
- for academic excellence at IIT Kharagpur.
- \SmallEntryGap
-  
- \textbf{Viterbi-India Scholarship} \hfill 2015\\
-  for funding a summer internship at USC. One of the 20 scholars in India.
-  \SmallEntryGap
-  
- \textbf{ACM ICPC 2015 and 2016 World Finalist} \hfill 2015\\
-  Our team qualified for the International Collegiate Programming Competition (ICPC)\\
-  twice, in 2015 and 2016. One of the 7 teams from India.
-  \SmallEntryGap
-  
- \textbf{JBNSTS third best project} \hfill 2014\\
-  Awarded for our work on Counting Dyck Paths of Bounded Height.
-  \SmallEntryGap
-  
- \textbf{Jagadish Bose National Science Talent Search (JBNSTS) Scholar} \hfill 2013\\
-  Awarded to 30 candidates in the state of West Bengal.
-  \SmallEntryGap
-  
- \textbf{Indian National Physics Olympiad (INPhO) Awardee} \hfill 2012\\
-  Among top 30 candidates in India.\\
-  Selected to attend the 
-  International Physics Olympiad (IPhO) selection camp.
-  \SmallEntryGap
-  
- \textbf{Kishore Vaigyanik Protsahan Yojana (KVPY) Scholar} \hfill 2011\\
-  by Dept. of Science and Technology, Govt. of India for exceptional aptitude in basic sciences.\\
-  Stood 7th in India.
-  \SmallEntryGap
-  
- \textbf{Indian National Mathematical Olympiad (INMO) Awardee} \hfill 2010\\
-  Among top 30 candidates in India.\\
-  Selected to attend the International Mathematical Olympiad Training Camp (IMOTC).
-  \SmallEntryGap
-  
- \textbf{Australian Mathematics Competition (AMC) Gold Medallist}\hfill 2009\\
-  Recieved a Gold Medal in the Intermediate Division. One of the 23 medallists in the world.
 
+ \textbf{All India Joint Entrance Exam} \hfill 2015\\
+  Secured a rank in \textbf{\emph{top 0.5 percentile}} out of 1.5 million students who took the JEE exam.\\
+  
+ \textbf{Kishore Vaigyanik Protsahan Yojana (KVPY) Scholar} \hfill 2014\\
+  By Dept. of Science and Technology, Govt. of India for exceptional aptitude in basic sciences.\\
+  Secured a rank in \textbf{\emph{top 0.3 percentile}} out of 0.1 million students who took the exam.\\
+  
+ \textbf{Scholar's Badge}\hfill 2012\\
+     Awarded with a scholar's badge in high school for securing a \textbf{\emph{GPA 10.0}} for 3 running years.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Certifications%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\EntryGap
+\heading{Summer Schools}
+\textbf{Machine Learning Summer School (MLSS'17)} \hfill 19\textsuperscript{th} June 2017 - 30\textsuperscript{th} June 2017\\
+organised at - Max Planck Institute, Tuebingen, Germany.\\
+Attended \href{http://mlss.tuebingen.mpg.de/}{MLSS-2017} held at Max Planck Institute for Intelligent Systems,
+Tuebingen. The summer school went on for two weeks and it hoisted a number of speakers
+excelling in the field of Optimisation, Learning Theory, Bayesian Inference, Causality, sub modularity, Reinforcement
+Learning and Robotics.  
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SKILLS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -271,9 +218,8 @@ with Prof. Partha Bhowmick
 \EntryGap
 \heading{Technical Skills}
 \SmallEntryGap
-\textbf{Proficient:} C, C++, Python, Java, Bash, Matlab, Tensorflow, Numpy\\
-\textbf{Familiar:} Mathematica, HTML, Javascript, Caffe, Theano, Scikit-learn,
-Keras, Lasagne, Nltk, Stanford Core-NLP
+\textbf{Proficient:} C, C++, ROS(Robot Operating System), Gazebo, Python, Matlab, Tensorflow, Theano, Numpy\\
+\textbf{Familiar:} Bash, HTML, Javascript, Scikit-learn, Keras, Lasagne, Nltk
 
 
 
@@ -285,13 +231,17 @@ Keras, Lasagne, Nltk, Stanford Core-NLP
 
 \SmallEntryGap
 \begin{tabular}{lll}
- Machine Learning & Advanced Machine Learning & Probability and Statistics\\
- Computational Statistics & Algorithms I and II & Selected Topics in Algorithms\\
- Artificial Intelligence & Matrix Algebra & Information Retrieval\\
- Speech and Natural Language Processing & Advanced Graph Theory
+ $\bullet$ Algorithms\\
+ $\bullet$ Machine Learning \\
+ $\bullet$ Deep Learning\\
+ $\bullet$ Reinforcement Learning\\
+ $\bullet$ Data Analytics*\\
 \end{tabular}
 
-% \SmallEntryGap
+\SmallEntryGap
+\SmallEntryGap
+\SmallEntryGap
+\emph{* Courses taken in the current semester}
 % \textbf{Others}\\
 % Algorithms-I \& II \mdot Discrete Mathematics \mdot Parallel and Distributed Algorithms 
 % \mdot Selected Topics in Algorithms  \mdot Computational Statistics

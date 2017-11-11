@@ -1,0 +1,412 @@
+#!/usr/bin/perl -w
+#############################################################################
+ #   Copyright (C) 2008 by Georg Martius <georg.martius@web.de>            #
+ #                                                                         #
+ #   This program is free software; you can redistribute it and/or modify  #
+ #   it under the terms of the GNU General Public License as published by  #
+ #   the Free Software Foundation; either version 2 of the License, or     #
+ #   (at your option) any later version.                                   #
+ #                                                                         #
+ #   This program is distributed in the hope that it will be useful,       #
+ #   but WITHOUT ANY WARRANTY; without even the implied warranty of        #
+ #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         #
+ #   GNU General Public License for more details.                          #
+ #                                                                         #
+ #   You should have received a copy of the GNU General Public License     #
+ #   along with this program; if not, write to the                         #
+ #   Free Software Foundation, Inc.,                                       #
+ #   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             #
+#############################################################################
+ #                                                                         #
+ #  This program takes care of running latex and bibtex for you.           #
+ #  It checks for dependencies and will automatically update the files.    #
+ #                                                                         #
+#############################################################################
+use strict;
+
+my $VERSION="0.85";
+my $DATE="17.11.2012";
+my $PDFMode = ($0 =~ /guardpdf/);
+print "Guard $VERSION ($DATE) for (pdf)latex files by Georg Martius\n";
+my $Usage="$0 [-q] filename\n \t-q\t\tfilter latex output to be quiter (requires filterlatexouput.pl)\n" .
+    "\tfilename\tfilename of latex file with or without ending\n";
+
+
+################################################
+# cmdline processing
+my $Dateiname=$ARGV[0];
+($Dateiname) && ($Dateiname ne "-h") or die $Usage;
+my $UseLatexFilter = 0;
+if ($Dateiname eq '-q'){
+    # check wether filterlatexoutput.pl is executable
+    system("echo \" \" | filterlatexoutput.pl");
+    if($? == 0){
+	$UseLatexFilter=1;
+    } else {
+	die "Please make sure filterlatexoutput.pl is in your path!\n";
+    }
+    $Dateiname=$ARGV[1];
+}
+if($Dateiname=~/(.*)\./){ #cut of ending
+    $Dateiname=$1 if ($1);
+}
+$Dateiname or die $Usage;
+my $TexDatei = $Dateiname . ".tex";
+
+my $i;
+
+################################################
+# load default settings
+#  from ./guardrc or $HOME/.guardrc or /etc/guardrc
+my $cfgfilelocal  = "guardrc";
+my $cfgfilehome   = $ENV{"HOME"} . "/.guardrc";
+my $cfgfilesystem = "/etc/guardrc";
+my $cfgfile;
+if( -r $cfgfilelocal){
+    $cfgfile = $cfgfilelocal;
+} elsif ( -r $cfgfilehome) {
+    $cfgfile = $cfgfilehome;
+} elsif ( -r $cfgfilesystem){
+    $cfgfile = $cfgfilesystem;
+} else {
+    ################### DUMP personal file
+    $cfgfile = $cfgfilehome;
+    if(open(F,"> $cfgfile")){
+        print F <<EOF;
+# editor to run at start, e.g. emacs, nedit, kwrite
+editor=
+# interval in seconds to look for changes (120 times this is checked for new dependencies)
+time=1
+# executeable of ps viewer that should be able to do autorefresh e.g. gv (ghostview)
+gv=gv
+# executeable of pdf viewer that should be able to do autorefresh e.g. okular
+pdf=okular
+# executeable to make index (you can give extra style options here)
+makeindex=makeindex
+# size of viewer e.g. 900+768
+viewersize=
+# position of viewer e.g. 0+0 or 1240+0  if you have two screens and want it on the right
+viewerpos=
+# of set to any value guard will not beep on complete compilation
+nobeep=
+# set the resolution for dvips -D e.g. 600 or 1200
+resolution=
+EOF
+       close(F);
+    } else {
+        die "cannot write config file: $cfgfile!\n";
+    }
+}
+
+#############################################
+# load settings
+open(F,"< $cfgfile") or die "cannot load $cfgfile";
+my @cfgdata=<F>;
+my %Settings;
+close(F);
+foreach my $line (@cfgdata)  {
+    if($line=~/(.*)=(.*)/){
+	if (!($1=~//) && !($1=~/^\#/)){
+	    $Settings{"$1"}="$2";
+	}
+    }
+}
+
+
+# Check if Tex-File is there, otherwise create one from a template
+if(!(open(F,"< $TexDatei"))){
+    if(open(F,"< template.tex")){
+      system("cat 'template.tex'>$TexDatei");
+  }else{
+      system("touch $TexDatei");
+  }
+}else{
+    close(F);
+}
+
+my $IsViewer=0;
+my $runtex=0;
+my $runbibtex=0;
+my $runmakeindex=0;
+my %FileContents;      # this is used to store the file contents of aux and ind, to check for re-run
+my $useBibTex=0;       # set to one if bibfile was found
+
+my @DependFiles=&GetRecDependendies($TexDatei);
+my $DepAnzahl=$#DependFiles;
+
+my @FileData; # enthaelt jeweils letzte Daten der Dateien
+
+&printDepFiles(@DependFiles);
+
+
+system($Settings{"editor"} . $TexDatei . " & ") if ($Settings{"editor"});
+my $counter=0;
+while (1){
+    $counter++;
+    # check for changed dependencies
+    for($i=0;$i<=$DepAnzahl;$i++){
+	# stat i th dep file
+	my $MomData= &getfiledata($DependFiles[$i]);
+	if(!$FileData[$i] || ($MomData cmp $FileData[$i])!=0){
+	    print("\nFile $DependFiles[$i] was modified ($MomData)") if ($FileData[$i]);
+	    $FileData[$i]=$MomData;
+	    $runtex=1;
+	    $runbibtex=1 if($DependFiles[$i] =~ /.bib$/);
+	}
+    }
+    #aller 120 Sekunden mal schauen,
+    # ob denn nicht eine neue Datei included wurde.
+    if ($counter>120){
+	@DependFiles=&GetRecDependendies($TexDatei);
+	if($DepAnzahl != $#DependFiles){
+	    &printDepFiles(@DependFiles);
+	};
+	$DepAnzahl = $#DependFiles;
+	$counter=0;
+    }
+
+    # start Latex
+    if ($runtex){
+	my $success=0;
+	if($PDFMode){
+	    print("\npdflatex now  **********************************************************\n");
+	    my $command="echo \"q\" | pdflatex -interaction=errorstopmode $TexDatei " .
+		($UseLatexFilter ? "| filterlatexoutput.pl " : "");
+	    $success = (system($command)==0);
+	}else{
+	    print("\nlatex now  **********************************************************\n");
+	    my $command="echo \"q\" | latex -interaction=errorstopmode $TexDatei " .
+		($UseLatexFilter ? "| filterlatexoutput.pl " : "") .
+		"&& dvips -R0 " .
+		($Settings{"resolution"} ? "-D " . $Settings{"resolution"} : "") .
+		"-o $Dateiname.ps $Dateiname.dvi " .
+		($UseLatexFilter ? " 2> $Dateiname.dvips.log " : "");
+	    $success = (system($command) == 0);
+	}
+
+	# read in idx file (if exists) to check whether we have to run makeindex
+	if(&FileContentChanged('.idx', $Dateiname)){
+	    print "Index file changed!\n";
+	    $runmakeindex=1;
+	}
+	# read in aux file to check whether we have to run latex again and bibtex.
+	if(!&FileContentChanged('.aux', $Dateiname)){
+            if($runmakeindex == 0){
+                $runtex=0; # okay no changes, don't rerun latex and copy ps/pdf file
+                if($success){
+                    if($PDFMode){
+                        print "Copy $Dateiname.pdf -> $Dateiname.copy.pdf for viewer...";
+                        my $command=($Settings{"nobeep"} ? "" : "echo -e \"\a\" && ") .
+                            "cp $Dateiname.pdf $Dateiname.copy.pdf";
+                        system($command);
+                    }else{
+                        print "Copy $Dateiname.ps -> $Dateiname.gv.ps for ghostview...";
+                        my $command= ($Settings{"nobeep"} ? "" : "echo -e \"\a\" && ") .
+                            "cp $Dateiname.ps $Dateiname.gv.ps";
+                        system($command);
+                    }
+                    print "Finished!\n";
+                }
+            }
+	}else{
+	    print "AUX file changed!\n";
+	    $runbibtex=1; # aux file changed, rerun latex and run bibtex
+	}
+    }
+    if($runbibtex && $useBibTex){
+	print("\nbibtex now  *************************************************************\n");
+	system("bibtex $Dateiname");
+    }
+    $runbibtex=0;
+    if($runmakeindex) {
+        my $mkidx=($Settings{"makeindex"} ? $Settings{"makeindex"} : "makeindex") .
+            " $Dateiname.idx";
+	print("\nmakeindex now  *************************************************************\n");
+        system($mkidx);
+    }
+    $runmakeindex=0;
+
+
+    #pruefen ob Viewer schon offen ist und PS/PDF-File da
+    my $doc = $PDFMode ? "$Dateiname.copy.pdf" : "$Dateiname.gv.ps";
+    if(!$IsViewer && -r "$doc"){
+	my $command = ($PDFMode ? $Settings{"pdf"} : $Settings{"gv"}) .
+	    ( $Settings{"viewersize"} || $Settings{"viewerpos"} ? " -geometry " : "") .
+	    $Settings{"viewersize"}  .
+	    ($Settings{"viewerpos"} ? "+" . $Settings{"viewerpos"} : "") .
+	    " $doc & ";
+	print $command;
+
+	system($command);
+	$IsViewer=1;
+    }
+    sleep($Settings{"time"});
+}
+
+
+################################################################################
+# checks whether ind file changed contents (Parameter: FilenameStem)
+sub FileContentChanged {
+    my $suffix = shift;
+    my $fileName=$_[0] . $suffix;
+    my $newFileContent;
+    open(AUX,"< $fileName") or return 0;
+    read AUX,$newFileContent,1000000; # maximally 1MB aux ;-)
+    close(AUX);
+    if(!$FileContents{$suffix}){ $FileContents{$suffix}="";}
+    if($newFileContent eq $FileContents{$suffix}){
+	return 0;
+    }else{
+	$FileContents{$suffix}=$newFileContent;
+	return 1;
+    }
+}
+
+################################################################################
+#gibt rekursiv alle Dependendies einer Datei zurueck (Parameter: Dateiname)
+sub GetRecDependendies{
+    my $fileName=$_[0];
+    $useBibTex=0;
+    my @paths;
+    my @depFiles=&GetRecDepHelper($fileName, @paths);
+    return ($fileName,@depFiles);
+}
+sub GetRecDepHelper{
+    my $fileName=shift;
+    my @paths=@_;
+    my @depFiles=&GetDependendies($fileName,\@paths);
+    my @collected=@depFiles;
+    my $f;
+    foreach $f (@depFiles) {
+	# check whether it is a tex-file or not
+	if($f =~ /.*\.tex$/) {
+	    push @collected, &GetRecDepHelper($f,@paths);
+	}
+    }
+    return @collected;
+}
+
+################################################################################
+#gibt Dependendies einer Datei zurueck (Parameter: Dateiname)
+sub GetDependendies{
+    my $fileName=shift;
+    my $pathsref=shift;
+    my %paths;
+    foreach my $p (@{$pathsref}){
+	$paths{$p}=1;
+    }
+    my @DependFiles;
+
+    open(TEXFILE,"< ". $fileName);
+    my @datei=<TEXFILE>;
+    my $line;
+    # this is used if an included graphics filename is not in the same line
+    my $waitforfilename=0;
+
+
+    foreach $line (@datei){
+	# check for graphicspath entries, which has to be used for the following deps
+	if ($line =~ /^[^%]*graphicspath{(.*)}/){ # \graphicspath not within a comment
+	    # parse {path1}{path2}....
+	    my @ps = split /[{}]+/, $1;
+	    foreach my $path (@ps){
+		if($path && -d $path){
+		    $paths{$path} = 1;
+		}
+	    }
+	}
+	if ($line =~ /^[^%]*input{(.*?)}/){ #\input ohne Kommentar
+            # check for .tex ending
+            my $inp = $1;
+            if($inp){
+                if($inp =~ /.*\.tex$/){
+                    push @DependFiles, $inp;
+                } else {
+                    push @DependFiles, $inp . ".tex";
+                }
+            }
+	}
+	if ($line =~ /^[^%]*include{(.*?)}/){ #\include ohne Kommentar
+	    push @DependFiles, $1 . ".tex" if($1);
+	}
+	#\includegraphics ohne Kommentar in einer Zeile
+	# or a filename in {} which belongs to a previous includegraphics
+	if ($waitforfilename && $line =~ /^[^%]*?{(.*?)}/ ||
+	    $line =~ /^[^%]*includegraphics.*?{(.*?)}/){
+	    $waitforfilename=0;
+	    if($1){
+		my @files = getGraphicsFileWithExt($1);
+		push @DependFiles, @files;
+		foreach my $path (keys %paths){
+		    foreach my $f (@files){
+			push @DependFiles, $path . $f;
+		    }
+		}
+	    }
+	}elsif ($line =~ /^[^%]*includegraphics[^{]*$/){
+	    $waitforfilename=1;
+	}
+	if ($line =~ /^[^%]*bibliography{(.*?)}/){ #bibliography ohne Kommentar
+	    my @bs = split /,+/, $1;
+	    foreach my $b (@bs){
+	        push @DependFiles, $b. ".bib";
+	    }
+	    push @DependFiles, $Dateiname . ".bbl";
+	    $useBibTex=1;
+	}
+	if ($line =~ /%.*GUARD{(.*?)}/){ #\expliciter Guard im Kommentar
+	    push @DependFiles, $1;
+	}
+    }
+
+    close(TEXFILE);
+
+    @{$pathsref} = keys %paths;
+    # in @DependFiles stehen jetzt alle zu ueberwachenden Dateien drin
+    return @DependFiles; #Rueckgabe
+}
+
+# checks for existing of similar files (same stem) and adds endings
+sub getGraphicsFileWithExt{
+    my $f = shift;
+    my @res;
+    if ($f =~ /.*\..*/){ # has an ending
+        push @res,$f;
+    }else{
+      if($PDFMode){
+          push @res, $f . ".jpg";
+          push @res, $f . ".png";
+          push @res, $f . ".pdf";
+      }else{
+          push @res, $f . ".eps";
+          push @res, $f . ".eps.gz";
+      }
+    }
+    return @res;
+}
+
+sub getfiledata {
+    my $file;
+    my @data;
+    $file = $_[0];
+    if (!$file) { return "no file";}
+    @data =  stat("$file");
+    my $ending;
+    if($data[9]){
+        return "$data[9],$data[12]";
+    }else{ # no file -> maybe with .tex,.eps or .png
+        foreach $ending (".tex", ".eps",".png") {
+            @data =  stat($file . $ending);
+            if($data[9]){
+	return "$data[9],$data[12]";
+            }
+        }
+    }
+    return "no file";
+}
+
+sub printDepFiles {
+    print("\nThe following files are under surveillance:\n");
+    my $f;
+    print join(",",@_) . "\n";
+}
